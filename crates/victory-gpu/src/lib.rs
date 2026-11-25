@@ -43,7 +43,11 @@ mod indirect;
 mod inplace;
 pub mod list;
 pub mod object;
+#[cfg(windows)]
+mod overlay;
 pub mod pipeline;
+#[cfg(windows)]
+mod pixels;
 #[cfg(windows)]
 mod plaincopy;
 #[cfg(windows)]

@@ -7705,6 +7705,7 @@ impl Meter {
             buffer.truncate(n.max(0) as usize);
             self.caption = Some(buffer);
         }
+        crate::overlay::set_frame(fps, ms, draws);
         let Some(caption) = &self.caption else { return };
         let text = format!(" | VIctory {fps:.0} fps {ms:.1} ms/frame {draws:.0} draws/frame");
         let mut text: Vec<u16> = caption.iter().copied().chain(text.encode_utf16()).collect();
@@ -7904,6 +7905,7 @@ impl Host {
             copy.close();
             tracing::info!(width, height, format = format.0, "presenting to a window");
             self.log_video_memory("right after the swap chain is made");
+            crate::overlay::start(hwnd, self.adapter.clone());
             Ok(Presenter {
                 swap_chain,
                 width,
