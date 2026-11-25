@@ -6346,7 +6346,8 @@ impl HostList {
             })
         };
         if let Err(e) = recorded {
-            fail(format_args!("a host state prelude did not record ({e})"));
+            tracing::warn!("a host state prelude did not record: {e}");
+            return None;
         }
         list.cast().ok()
     }
