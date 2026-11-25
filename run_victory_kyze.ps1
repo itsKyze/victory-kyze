@@ -1,45 +1,52 @@
-# Launcher for Victory-Kyze (Fully Optimized for NVIDIA GeForce GTX 1650 & Ryzen 5 5600G)
+# Launcher for Victory-Kyze (Pure Standalone Mode, Fully Optimized for GTX 1650 & Ryzen 5 5600G)
 Set-Location -Path $PSScriptRoot
 
 $env:RUST_LOG = "warn,victory_gpu::descriptor::host=off,victory_gpu::host=info,victory_gpu::pipeline=info"
 
+# --- Dedicated Native Storage & Cache Directories ---
+$env:VICTORY_CACHE_DIR = "$env:LOCALAPPDATA\victory\cache"
+$env:VICTORY_DATA_DIR = "$env:LOCALAPPDATA\victory\data"
+
+# Ensure directories exist
+if (-not (Test-Path $env:VICTORY_CACHE_DIR)) { New-Item -ItemType Directory -Path $env:VICTORY_CACHE_DIR -Force | Out-Null }
+if (-not (Test-Path $env:VICTORY_DATA_DIR)) { New-Item -ItemType Directory -Path $env:VICTORY_DATA_DIR -Force | Out-Null }
+
 # --- NVIDIA GPU Architecture Wave Tuning ---
 # NVIDIA Turing (GTX 1650) executes in 32-thread warps.
-# Setting Wave 32 matches hardware directly, cutting DXC translation and divergence overhead.
 $env:VICTORY_HOST_WAVE = "32"
 
 # --- CPU Multithreading for Ryzen 5 5600G (6 Cores / 12 Threads) ---
-# Allocate 10 background worker threads for instant asynchronous shader & pipeline compilation.
+# 10 worker threads for instantaneous pipeline compilation
 $env:VICTORY_PIPELINE_WORKERS = "10"
 
-# --- VRAM Allocation (GTX 1650: 3.84 GB GDDR5 Dedicated VRAM) ---
-# Card buffers (geometry/constant buffers in VRAM): 1024 MB
-$env:VICTORY_CARD_BUFFERS_MB = "1024"
+# --- VRAM Allocation (GTX 1650: 3.84 GB Dedicated GDDR5) ---
+# Card buffers (geometry/constant buffers in VRAM): 800 MB
+$env:VICTORY_CARD_BUFFERS_MB = "800"
 $env:VICTORY_CARD_REHASH_RUNS = "1"
 
-# Textures budget: 2800 MB (leaves 600 MB safely for render targets, preventing blur/Minecraft textures)
-$env:VICTORY_TEXTURE_BUDGET_MB = "2800"
+# Textures budget: 2400 MB (leaves safe headroom for render targets and Windows DWM)
+$env:VICTORY_TEXTURE_BUDGET_MB = "2400"
 $env:VICTORY_CARD_ROOM_FOR_TARGETS_MB = "600"
 
 # --- Texture Streaming & Staging Throughput (Fixes Blurry/Minecraft Faces) ---
-# Maximizes PCI-e staging throughput so character models and facial textures stream in high resolution immediately
-$env:VICTORY_TEXTURE_STAGE_MB = "192"
-$env:VICTORY_TEXTURE_STAGE_MS = "50"
-$env:VICTORY_TEXTURE_CATCHUP = "1"
+# 128 MB staging capped at 20 ms per frame to guarantee zero frametime drops
+$env:VICTORY_TEXTURE_STAGE_MB = "128"
+$env:VICTORY_TEXTURE_STAGE_MS = "20"
+$env:VICTORY_TEXTURE_CATCHUP = "0"
 $env:VICTORY_TEXTURE_NO_WAIT = "1"
 $env:VICTORY_HEAP_RECHECK = "0"
 
 # --- Memory Watch & Kernel Cache Optimization ---
 $env:VICTORY_VIEW_KNOWN = "1"
 $env:VICTORY_ASK_ONCE = "1"
-# Use 'guards' to eliminate the 18,000+ slots flood bug
 $env:VICTORY_PAGE_WRITES = "guards"
 
-# --- Indirect Draw Clamping Batching (Massive FPS boost during gameplay mesh draws) ---
+# --- Indirect Draw Clamping Batching ---
 $env:VICTORY_INDIRECT_WINDOW = "1"
 
-# --- Pipeline Compilation Waiting (Eliminates Black Screen and Dropped Draws) ---
-$env:VICTORY_PIPELINE_WAIT_MS = "500"
+# --- Pipeline Compilation Waiting (Eliminates Black Screen & Dropped Draws) ---
+# Wait up to 1500 ms for missing shaders so 3D world geometry is never dropped!
+$env:VICTORY_PIPELINE_WAIT_MS = "1500"
 $env:VICTORY_PIPELINE_WAIT_SHARED = "1"
 
 # --- Relay, Queue & Async Presentation ---
@@ -62,6 +69,6 @@ $env:VICTORY_DSTORAGE_RETRIES = "60"
 $env:VICTORY_DISPLAY_MODE = "1280x720"
 $env:VICTORY_WINDOW_MAX = "1280x720"
 
-Write-Host ">>> Launching GTA VI via Victory-Kyze (Optimized NVIDIA Mode)..." -ForegroundColor Cyan
-Write-Host ">>> Wave: 32 (NVIDIA Turing) | Workers: 10 | VRAM Texture Budget: 2800 MB" -ForegroundColor Gray
-.\target\release\victory.exe run --execute D:\GTA6.Xbox.v1.0.2.1-CYBERLEEK\game_scarlett_master.exe *>&1 | Tee-Object -FilePath "last_run.log"
+Write-Host ">>> Launching GTA VI via Victory-Kyze (Pure Standalone 720p Mode)..." -ForegroundColor Cyan
+Write-Host ">>> Wave: 32 | Workers: 10 | Texture Budget: 2400 MB | Pipeline Wait: 1500ms" -ForegroundColor Gray
+.\target\release\victory.exe run --console series-x --unimplemented trap --execute D:\GTA6.Xbox.v1.0.2.1-CYBERLEEK\game_scarlett_master.exe
