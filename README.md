@@ -10,11 +10,11 @@ This fork incorporates critical enhancements specifically tailored for **NVIDIA 
 
 ## Key Features & Enhancements
 
-- 🚀 **NVIDIA Discrete GPU Priority**: Intelligent DXGI adapter selection that automatically binds dedicated GPUs (NVIDIA GTX/RTX) rather than integrated APUs.
-- 🛡️ **Engine Assert & Suicide Trap Neutralization**: Patched Vectored Exception Handling (VEH) that intercepts and safely bypasses hardcoded game assertions (`0x80000003` / `int3` breakpoints and NULL page write suicides), enabling smooth transition into the live 3D world.
-- ⚡ **Anti-Hang Win32 Message Pump**: Embedded asynchronous Win32 message dispatcher during shader pipeline translation, completely preventing Windows DWM `[Not Responding]` white-screen freezes.
-- 💾 **DirectStorage Physical Page Write Resiliency**: Tolerant physical page mapping for seamless world streaming without `E_INVALIDARG` aborts.
-- 🎨 **Lighting & Depth Emulation**: Emulated `OMSetDepthBounds` and ambient depth illumination presets for realistic in-game rendering.
+-  **NVIDIA Discrete GPU Priority**: Intelligent DXGI adapter selection that automatically binds dedicated GPUs (NVIDIA GTX/RTX) rather than integrated APUs.
+-  **Engine Assert & Suicide Trap Neutralization**: Patched Vectored Exception Handling (VEH) that intercepts and safely bypasses hardcoded game assertions (`0x80000003` / `int3` breakpoints and NULL page write suicides), enabling smooth transition into the live 3D world.
+-  **Anti-Hang Win32 Message Pump**: Embedded asynchronous Win32 message dispatcher during shader pipeline translation, completely preventing Windows DWM `[Not Responding]` white-screen freezes.
+-  **DirectStorage Physical Page Write Resiliency**: Tolerant physical page mapping for seamless world streaming without `E_INVALIDARG` aborts.
+-  **Lighting & Depth Emulation**: Emulated `OMSetDepthBounds` and ambient depth illumination presets for realistic in-game rendering.
 
 ---
 
