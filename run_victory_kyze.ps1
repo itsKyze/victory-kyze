@@ -20,13 +20,13 @@ $env:VICTORY_HOST_WAVE = "32"
 $env:VICTORY_PIPELINE_WORKERS = "10"
 
 # --- VRAM Allocation (GTX 1650: 3.84 GB Dedicated GDDR5) ---
-# Card buffers (geometry/constant buffers in VRAM): 512 MB
-$env:VICTORY_CARD_BUFFERS_MB = "512"
+# Card buffers (geometry/constant buffers in VRAM): 384 MB
+$env:VICTORY_CARD_BUFFERS_MB = "384"
 $env:VICTORY_CARD_REHASH_RUNS = "1"
 
-# Textures budget: 1800 MB (leaves 1200+ MB headroom for D3D12 allocators, targets, DWM, and driver heaps)
-$env:VICTORY_TEXTURE_BUDGET_MB = "1800"
-$env:VICTORY_CARD_ROOM_FOR_TARGETS_MB = "400"
+# Textures budget: 1500 MB (leaves 1500+ MB headroom for D3D12 allocators, targets, DWM, and driver heaps)
+$env:VICTORY_TEXTURE_BUDGET_MB = "1500"
+$env:VICTORY_CARD_ROOM_FOR_TARGETS_MB = "300"
 
 # --- Texture Streaming & Staging Throughput (Fixes Blurry/Minecraft Faces) ---
 # 64 MB staging capped at 16 ms per frame to prevent VRAM spikes and frametime drops

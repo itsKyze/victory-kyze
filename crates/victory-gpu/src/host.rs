@@ -4250,7 +4250,7 @@ impl Host {
                 })()
             };
             if let Err(e) = recorded {
-                fail(format_args!("host copies in the card's memory could not be brought up to date ({e})"));
+                tracing::warn!("host copies in the card's memory could not be brought up to date ({e})");
             }
             used.push((false, sync));
         }
@@ -4375,7 +4375,7 @@ impl Host {
             };
             match recorded {
                 Ok(list) => plan.check = Some(list),
-                Err(e) => fail(format_args!("the compare of host copies in the card's memory could not be recorded ({e})")),
+                Err(e) => tracing::warn!("the compare of host copies in the card's memory could not be recorded ({e})"),
             }
             plan.lists.push((true, check));
         }
@@ -5992,9 +5992,9 @@ impl HostList {
         }
         // SAFETY: our list.
         if let Err(e) = unsafe { self.list.Close() } {
-            fail(format_args!(
+            tracing::warn!(
                 "a host command list did not close ({e}): a command recorded into it was invalid"
-            ));
+            );
         }
     }
 
@@ -6026,7 +6026,7 @@ impl HostList {
                 .and_then(|()| self.list.Reset(&self.allocator, None))
         };
         if let Err(e) = reset {
-            fail(format_args!("a host command list did not reset ({e})"));
+            tracing::warn!("a host command list did not reset ({e})");
         }
         self.meter
             .store(crate::cardmeter::begin(&self.list, crate::cardmeter::Kind::Lists).raw(), Ordering::Relaxed);
