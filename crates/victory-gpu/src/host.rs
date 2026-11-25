@@ -7872,6 +7872,9 @@ impl Host {
         height: u32,
         format: DXGI_FORMAT,
     ) -> windows::core::Result<Presenter> {
+        unsafe {
+            DisableProcessWindowsGhosting();
+        }
         let hwnd = match title_window() {
             Some(hwnd) => hwnd,
             None => window(width, height)?,
@@ -8266,6 +8269,7 @@ fn make_window(width: u32, height: u32) -> windows::core::Result<HWND> {
     const CLASS: PCWSTR = w!("VIctory");
     // SAFETY: registers our class once and creates a window of it.
     unsafe {
+        DisableProcessWindowsGhosting();
         let instance = GetModuleHandleW(None)?;
         let class = WNDCLASSEXW {
             cbSize: size_of::<WNDCLASSEXW>() as u32,
